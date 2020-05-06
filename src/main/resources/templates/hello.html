@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hello</title>
+</head>
+<body>
+<div id="app">
+
+</div>
+<div id="app2">
+    <h2>
+        {{message}}
+    </h2>
+    <button @Click="say()">点击测试</button>
+</div>
+<div id="app5"></div>
+<script src="js/vue.js"></script>
+<script src="js/main.js"></script>
+<script>
+    const app = new Vue({
+        el: "#app2",
+        data: {
+            message:"测试webpack",
+        },
+        methods: {
+            say:function() {
+                this.message = '成功';
+                console.log('你哈');
+            }
+        },
+    });
+
+    const vue5 = new Vue({
+      el:"#app5"
+    })
+</script>
+</body>
+</html>
