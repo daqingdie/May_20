@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>尝试分页查询</title>
+    <meta name="viewport" content="width=device-width" ,initial-scale=1,maximum-scale=1,user-scalable=no>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <!-- 通过CDN引入Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- 通过CDN引入axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+            <th>用户Id</th>
+            <th>用户名</th>
+            <th>用户密码</th>
+            <th>手机号</th>
+            <th>用户权限</th>
+            <th>操作</th>
+        </tr>
+        <template v-for="user in users.content">
+            <tr>
+                <td>{{user.id}}</td>
+                <td>{{user.username}}</td>
+                <td>{{user.password}}</td>
+                <td>{{user.phone}}</td>
+                <td>{{getPower(user.power)}}</td>
+                <td>
+                    <a href="#" @click="delUser(user.id,users.number)">删除</a>
+                    <a href="#" @click="edit(user)">编辑</a>
+                </td>
+            </tr>
+        </template>
+        <template>
+            <tr>
+                <td><a href="#" @click="pgup(0)">首页</a></td>
+                <td><a href="#" @click="pgup(users.number-1)" v-if="users.number>0">上一页</a></td>
+                <td><a href="#" @click="pgup(users.number+1)" v-if="users.number<users.totalPages-1">下一页</a></td>
+                <td><a href="#" @click="pgup(users.totalPages-1)">尾页</a></td>
+                <td>当前页<label>{{users.number+1}}</label></td>
+            </tr>
+        </template>
+        <template>
+            <tr>
+                <td><input type="text" placeholder="用户id" readonly="readonly" v-model="user.id" /></td>
+                <td><input type="text" placeholder="请输入用户名" v-model="user.username" /></td>
+                <td><input type="text" placeholder="请输入密码" v-model="user.password" /></td>
+                <td><input type="text" placeholder="请输入手机号" v-model="user.phone" /></td>
+                <td><input type="text" placeholder="请输入权限" v-model="user.power" /></td>
+                <td>
+                    <button type="button" @click="addUser">保存</button>
+                    <button type="button" @click="remove">清空</button>
+                </td>
+            </tr>
+        </template>
+    </table>
+</div>
+</div>
+
+
+<script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        data: {
+            user: {
+                id: '',
+                username: '',
+                password: '',
+                phone: '',
+                power: ''
+            },
+            users: []
+        },
+        computed:{
+
+        },
+        methods: {
+            //分页查询
+            findByPage: function (page, size) {
+                axios.get('http://localhost:8889/findByPage', {
+                    params: {
+                        page: page,
+                        size: size,
+                    }
+                })
+                    .then((response) => {
+                        this.users = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            //调用分页查询方法
+            pgup: function (page) {
+                this.findByPage(page, 4);
+            },
+            edit: function(user) {
+                this.user.id=user.id;
+                this.user.username=user.username;
+                this.user.password=user.password;
+                this.user.phone=user.phone;
+                this.user.power=user.power;
+            },
+
+            //返回权限
+            getPower:function (power) {
+                if(power===1)
+                    return "管理员";
+                else if(power===2)
+                    return "客服";
+                else if(power===3)
+                    return "招聘者";
+                else
+                    return "求职者";
+            },
+
+            //清空
+            remove:function () {
+                this.user.id =null;
+                this.user.username= '';
+                this.user.password = '';
+                this.user.phone= '';
+                this.user.power = '';
+            },
+
+            //新增
+            addUser: function () {
+                const _this = this;
+                var user = JSON.stringify(_this.user)
+                axios.post('http://localhost:8889/addUser', user, {
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8" //头部信息
+                    }
+                })
+                    .then(function(response) {
+                        //保存完之后查询所有的信息
+                        _this.remove();
+                        _this.pgup(0);
+                    })
+                    .catch(function(error) {
+                        console.log(error);
+                    });
+            },
+
+            //删除
+            delUser:function (id,page) {
+                var _this = this;
+                axios.delete('http://localhost:8889/delUser', {
+                    params: {
+                        id: id
+                    }
+                })
+                    .then(function(response) {
+                        _this.remove();
+                        _this.pgup(page)
+                    })
+                    .catch(function(error) {
+                        console.log(error);
+                    });
+            }
+        },
+        //创建
+        created: function() { //创建vue对象的时候自动调用查询所有的方法
+            this.findByPage(0,4);
+        },
+
+    })
+</script>
+</body>
+</html>

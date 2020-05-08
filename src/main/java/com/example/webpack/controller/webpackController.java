@@ -15,6 +15,11 @@ public class webpackController {
     private UserService userService;
 
 
+    @RequestMapping("/testPage")
+    public String toPage(Model model) {
+        return "page";
+    }
+
     @RequestMapping("/hello")
     public String index(Model model) {
         List<User> userList = userService.selectAll();
@@ -23,5 +28,10 @@ public class webpackController {
             System.out.println(user.getUsername());
         }
         return "hello";
+    }
+
+    @RequestMapping("/axios")
+    public String axios() {
+        return ("axios");
     }
 }
