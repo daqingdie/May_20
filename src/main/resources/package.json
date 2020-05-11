@@ -10,5 +10,8 @@
   "description": "",
   "devDependencies": {
     "webpack": "^3.6.0"
+  },
+  "dependencies": {
+    "axios": "^0.19.2"
   }
 }
