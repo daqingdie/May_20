@@ -1,0 +1,68 @@
+<!--
+    标题:学习vue中使用axios
+    时间:2020.5.8
+    内容:axios的get,post等方法的基本使用
+    BY:吴烈清
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学习axios的基本用法</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <h2><input type="text" v-model="message"></h2>
+    <h2>{{newMessage}}</h2>
+    <button @click="send">get发送</button>
+    <button @Click="mySubmit">post发送</button>
+</div>
+<script src="js/vue.js"></script>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data:{
+            message: "发送给controller的信息",
+            newMessage: '暂未接受消息',
+        },
+        methods: {
+            send() {
+                _this = this;
+                /*由于作用域问题,传统写法需要先将this保存下来,也可采用箭头写法*/
+                /*axios的get方法的格式一般为axios.get(url,数据对象).then(方法2).error(方法3)
+                    url格式为全地址字符串,数据对象定义params,params对象里在定义具体的数据键值对
+                    方法2是发送后接受返回数据的操作,response即为返回对象
+                    方法3是拦截到错误时调用的方法
+                * */
+                axios.get("http://localhost:8889/axiosGetNews", {params: {message: _this.message}})
+                    .then((response) => {
+                        console.log(response);
+                        this.newMessage = response.data;
+                    }).catch((error) => {
+                    console.log(error);
+                });
+            },
+
+            mySubmit() {
+                _this = this;
+                const message = JSON.stringify(_this.message);
+                axios.post("http://localhost:8889/axiosPostNews", message,{
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8" //头部信息
+                    }
+                })
+                    .then((response) => {
+                        console.log(response);
+                        this.newMessage = response.data;
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+        }
+    });
+
+</script>
+</body>
+</html>
