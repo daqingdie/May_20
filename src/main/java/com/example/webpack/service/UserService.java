@@ -20,4 +20,6 @@ public interface UserService  {
     public void insertUser(User user);
 
     void deleteUser(long Id);
+
+    void testTrans();
 }

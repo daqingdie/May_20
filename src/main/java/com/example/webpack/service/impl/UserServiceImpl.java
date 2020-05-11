@@ -9,12 +9,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Slf4j
 @Service
+@Transactional(rollbackOn = Exception.class)
 public class UserServiceImpl implements UserService {
 
     @Resource
@@ -47,5 +49,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(long Id) {
         userRepository.deleteById(Id);
+    }
+
+    @Override
+    public void testTrans() throws RuntimeException{
+        User user = selectAll().get(0);
+        user.setPassword("123456");
+        userRepository.save(user);
+        int i = 2 / 0;
+        user.setPhone("10086");
     }
 }
