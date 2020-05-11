@@ -57,6 +57,7 @@
             </tr>
         </template>
     </table>
+    <button @Click="testTrans">测试事务的按钮</button>
 </div>
 </div>
 
@@ -88,6 +89,8 @@
                 })
                     .then((response) => {
                         this.users = response.data;
+                        console.log(this.users);
+                    console.log(response);
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -158,6 +161,20 @@
                         _this.pgup(page)
                     })
                     .catch(function(error) {
+                        console.log(error);
+                    });
+            },
+            testTrans() {
+                axios.get('http://localhost:8889/testTrans', {
+                    params: {
+                        page: 0,
+                        size: 3,
+                    }
+                })
+                    .then((response) => {
+                        console.log(response.data);
+                    })
+                    .catch(function (error) {
                         console.log(error);
                     });
             }
