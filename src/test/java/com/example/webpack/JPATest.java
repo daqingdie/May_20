@@ -7,8 +7,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-
+import com.example.webpack.Dao.UserPageRepository;
+import com.example.webpack.POJO.User;
+import org.junit.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -18,6 +22,9 @@ import java.util.stream.Collectors;
 public class JPATest {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserPageRepository userPageRepository;
 
     //获取日志记录器Logger，名字为本类类名
     private static Logger log = Logger.getLogger("com.lq.JpaTest");
@@ -51,5 +58,27 @@ public class JPATest {
 
 
 
+    }
+
+    @Test
+    /**
+     * 利用继承PagingAndSoringRepository的接口来测试JPA分页查询
+     */
+    public void testPage() {
+        findAll(0, 5);
+        System.out.println("---------------------------------------------");
+        findAll(1, 5);
+        System.out.println("---------------------------------------------");
+        findAll(0,7);
+    }
+
+    private void findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> pUsers = userPageRepository.findAll(pageable);
+        List<User> users = pUsers.getContent();
+        System.out.println("全部记录为:"+pUsers.getTotalElements()+"条");
+        System.out.println("全部页数为"+pUsers.getTotalPages()+"页");
+        System.out.println("当前页码:第"+(pUsers.getNumber()+1)+"页");
+        users.stream().forEach(u-> System.out.println(u));
     }
 }
