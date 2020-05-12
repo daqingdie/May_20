@@ -1,9 +1,8 @@
 package com.example.webpack.service;
 
-import com.example.webpack.Dao.User;
+import com.example.webpack.POJO.User;
 import org.springframework.data.domain.Page;
 
-import javax.persistence.Id;
 import java.util.List;
 
 public interface UserService  {

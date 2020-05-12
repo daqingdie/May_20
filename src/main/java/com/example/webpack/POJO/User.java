@@ -1,4 +1,4 @@
-package com.example.webpack.Dao;
+package com.example.webpack.POJO;
 
 import lombok.*;
 

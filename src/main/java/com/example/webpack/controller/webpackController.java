@@ -1,6 +1,6 @@
 package com.example.webpack.controller;
 
-import com.example.webpack.Dao.User;
+import com.example.webpack.POJO.User;
 import com.example.webpack.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
