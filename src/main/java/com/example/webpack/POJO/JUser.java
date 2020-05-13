@@ -2,11 +2,17 @@ package com.example.webpack.POJO;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.Date;
 
 @JsonPropertyOrder(value = {"name","createtime"})
 @AllArgsConstructor
+@Data
+@ToString
+@NoArgsConstructor
 //@JsonPropertyOrder(value={"pname1","pname2"}) 改变子属性在JSON序列化中的默认定义的顺序。如：param1在先，param2在后。
 public class JUser {
     @JsonIgnore
